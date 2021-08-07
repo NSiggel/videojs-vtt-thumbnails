@@ -310,7 +310,8 @@ class vttThumbnailsPlugin {
 
   processVtt(data) {
     const processedVtts = [];
-    const vttDefinitions = data.split(/[\r\n][\r\n]/i);
+    // const vttDefinitions = data.split(/[\r\n][\r\n]/i);
+    const vttDefinitions = data.split(/[\r\n][\r\n][\r\n][\r\n]/i)
 
     vttDefinitions.forEach((vttDef) => {
       if (vttDef.match(/([0-9]{2}:)?([0-9]{2}:)?[0-9]{2}(.[0-9]{3})?( ?--> ?)([0-9]{2}:)?([0-9]{2}:)?[0-9]{2}(.[0-9]{3})?[\r\n]{1}.*/gi)) {
@@ -319,7 +320,8 @@ class vttThumbnailsPlugin {
         const vttTimingSplit = vttTiming.split(/ ?--> ?/i);
         const vttTimeStart = vttTimingSplit[0];
         const vttTimeEnd = vttTimingSplit[1];
-        const vttImageDef = vttDefSplit[1];
+        // const vttImageDef = vttDefSplit[1];
+        const vttImageDef = vttDefSplit[2];
         const vttCssDef = this.getVttCss(vttImageDef);
 
         processedVtts.push({
@@ -398,8 +400,16 @@ class vttThumbnailsPlugin {
     const imageProps = this.getPropsFromDef(vttImageDef);
 
     cssObj.background = 'url("' + imageProps.image + '") no-repeat -' + imageProps.x + 'px -' + imageProps.y + 'px';
-    cssObj.width = imageProps.w + 'px';
-    cssObj.height = imageProps.h + 'px';
+    // cssObj.width = imageProps.w + 'px';
+    // cssObj.height = imageProps.h + 'px';
+    // cssObj.url = imageProps.image;
+    if (imageProps.w || imageProps.h) {
+      cssObj.width = imageProps.w + 'px';
+      cssObj.height = imageProps.h + 'px';
+    } else {
+      cssObj.width = '120px';
+      cssObj.height = '90px';
+    }
     cssObj.url = imageProps.image;
 
     return cssObj;
